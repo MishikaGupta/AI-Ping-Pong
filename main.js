@@ -21,21 +21,45 @@ var ball = {
     dy:3
 }
 
+rightwristX = 0;
+rightwristY = 0;
+scoreRightWrist = 0;
+GameStatus = "";
+
 function setup(){
  canvas =  createCanvas(700,600);
  canvas.parent('canvas');
 
+ video = createCapture(VIDEO);
+ video.size(700,600);
+ video.hide();
 
+ poseNet = ml5.poseNet(video , modelLoaded);
+ poseNet.on('pose' , gotPoses);
 }
 
-function preload() {
-	missed_wav = loadSound("missed.wav");
-	setSprites();
+function modelLoaded() {
+  console.log("Model is Loaded!");
 }
+
+function gotPoses(results) {
+  if(results.length > 0)
+  {
+    rightwristX = results[0].pose.nose.x;
+    rightwristY = results[0].pose.nose.y;
+    scoreRightWrist = results[0].pose.keypoints[10].score;
+    console.log(" rightwristX = " + rightwristX +", rightwristY = " + rightwristY);
+  }
+}
+
 
 function draw(){
 
+if(GameStatus == "start")
+{
+
  background(0); 
+ image(video , 0, 0, 700, 600);
 
  fill("black");
  stroke("black");
@@ -45,6 +69,13 @@ function draw(){
  stroke("black");
  rect(0,0,20,700);
  
+    if(scoreRightWrist > 0.2)
+    {
+      fill("red");
+      stroke("red");
+      circle(rightwristX , rightwristY , 25);
+    }
+
    //funtion paddleInCanvas call 
    paddleInCanvas();
  
@@ -72,6 +103,8 @@ function draw(){
    
    //function move call which in very important
     move();
+
+  }
 }
 
 
@@ -168,4 +201,9 @@ function paddleInCanvas(){
   if(mouseY < 0){
     mouseY =0;
   }  
+}
+
+function startGame() {
+  GameStatus = "start";
+  document.getElementById("status").innerHTML = "Game is Loading..";
 }

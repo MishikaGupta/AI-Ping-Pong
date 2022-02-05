@@ -25,18 +25,20 @@
 font-size: 22px;
 }
 
-h4 
+#copyright_footer
 {
     background-color: #f5f5f5;
     line-height: 2;
-    margin: 0px;
-    bottom: 0%;
+    margin-bottom: 0px;
+    float: none;
+    margin-top: 120px;
 }
 
 .modal-dialog
 {
     width: 90%;
 }
+
 .instruction_image
 {
     display: inline-block;
@@ -45,5 +47,5 @@ h4
 
 #instructions
 {
-    font: 16px;
+    font: 20px;
 }
